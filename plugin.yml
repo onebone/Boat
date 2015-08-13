@@ -1,0 +1,5 @@
+name: Boat
+main: onebone\boat\Main
+version: "1.0"
+author: onebone
+api: [1.12.0]
