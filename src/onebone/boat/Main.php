@@ -8,9 +8,9 @@ use pocketmine\inventory\BigShapelessRecipe;
 use pocketmine\item\Item;
 use pocketmine\entity\Entity;
 use pocketmine\event\server\DataPacketReceiveEvent;
-use pocketmine\network\protocol\InteractPacket;
-use pocketmine\network\protocol\SetEntityLinkPacket;
-use pocketmine\network\protocol\MovePlayerPacket;
+use pocketmine\network\mcpe\protocol\InteractPacket;
+use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
+use pocketmine\network\mcpe\protocol\MovePlayerPacket;
 use pocketmine\event\player\PlayerQuitEvent;
 
 use onebone\boat\item\Boat as BoatItem;
@@ -25,7 +25,7 @@ class Main extends PluginBase implements Listener{
 
     Item::$list[333] = BoatItem::class;
     Item::addCreativeItem(new Item(333));
-    $this->getServer()->addRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANK, null, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, null, 1)));
+    $this->getServer()->addRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANKS, 0, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, 0, 1)));
 
     Entity::registerEntity("\\onebone\\boat\\entity\\Boat", true);
 

@@ -21,7 +21,8 @@
 
 namespace onebone\boat\packet;
 
-use pocketmine\network\protocol\DataPacket;
+use pocketmine\network\mcpe\NetworkSession;
+use pocketmine\network\mcpe\protocol\DataPacket;
 
 class PlayerInputPacket extends DataPacket{
 	const NETWORK_ID = 0xae;
@@ -42,6 +43,11 @@ class PlayerInputPacket extends DataPacket{
 
 	public function encode(){
 
+	}
+
+	public function handle(NetworkSession $session) : bool {
+
+		return false;
 	}
 
 }

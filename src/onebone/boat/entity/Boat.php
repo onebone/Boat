@@ -3,11 +3,11 @@
 namespace onebone\boat\entity;
 
 use pocketmine\entity\Entity;
-use pocketmine\network\protocol\AddEntityPacket;
+use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\event\entity\EntityDeathEvent;
 use pocketmine\Player;
 use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\network\protocol\EntityEventPacket;
+use pocketmine\network\mcpe\protocol\EntityEventPacket;
 use pocketmine\item\Item;
 
 class Boat extends Entity{
