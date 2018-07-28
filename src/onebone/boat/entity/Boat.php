@@ -6,6 +6,7 @@ use onebone\boat\item\Boat as BoatItem;
 use pocketmine\block\Planks;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageEvent;
+use pocketmine\event\entity\EntityRegainHealthEvent;
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
 
@@ -55,6 +56,23 @@ class Boat extends Entity{
 				$player->dataPacket($pk);
 			}
 		}
+	}
+
+	/**
+	 * @param int $currentTick
+	 *
+	 * @return bool
+	 */
+	public function onUpdate(int $currentTick) : bool{
+		if($this->closed){
+			return false;
+		}
+
+		//Regenerate health 1⁄10 per tick
+		if($this->getHealth() < $this->getMaxHealth() && $currentTick % 10 === 0){
+			$this->heal(new EntityRegainHealthEvent($this, 1, EntityRegainHealthEvent::CAUSE_REGEN));
+		}
+		return parent::onUpdate($currentTick);
 	}
 
 	/**
