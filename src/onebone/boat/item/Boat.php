@@ -40,14 +40,11 @@ class Boat extends BoatItemPM{
 		$boat->spawnToAll();
 
 		$item = $player->getInventory()->getItemInHand();
-		$count = $item->getCount();
-		if(--$count <= 0){
+		if(--$item->count <= 0){
 			$player->getInventory()->setItemInHand(Item::get(Item::AIR));
-			return;
+		}else{
+			$player->getInventory()->setItemInHand($item);
 		}
-
-		$item->setCount($count);
-		$player->getInventory()->setItemInHand($item);
 		return true;
 	}
 }
