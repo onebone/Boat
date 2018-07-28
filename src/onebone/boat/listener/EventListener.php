@@ -7,7 +7,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\{
-	InteractPacket, InventoryTransactionPacket, MovePlayerPacket, SetEntityLinkPacket
+	InteractPacket, InventoryTransactionPacket, MoveEntityAbsolutePacket, SetEntityLinkPacket
 };
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Server;
@@ -46,11 +46,11 @@ class EventListener implements Listener{
 					unset($this->riding[$event->getPlayer()->getName()]);
 				}
 			}
-		}elseif($packet instanceof MovePlayerPacket){
+		}elseif($packet instanceof MoveEntityAbsolutePacket){
 			if(isset($this->riding[$player->getName()])){
 				$boat = $player->getLevel()->getEntity($this->riding[$player->getName()]);
 				if($boat instanceof BoatEntity){
-					$boat->teleport($packet->position);
+					$boat->teleport($packet->position, $packet->xRot, $packet->zRot);
 				}
 			}
 		}
