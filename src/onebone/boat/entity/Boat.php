@@ -10,8 +10,8 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 class Boat extends Entity{
 	const NETWORK_ID = 90;
 
-	public function attack($damage, EntityDamageEvent $source) : void{
-		parent::attack($damage, $source);
+	public function attack(EntityDamageEvent $source) : void{
+		parent::attack($source);
 
 		if(!$source->isCancelled()){
 			$pk = new EntityEventPacket();
