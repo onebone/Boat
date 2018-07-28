@@ -25,7 +25,7 @@ class Main extends PluginBase implements Listener{
 
 		ItemFactory::registerItem(new BoatItem(), true);
 		Item::addCreativeItem(new BoatItem());
-		$this->getServer()->addRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANK, null, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, null, 1)));
+		$this->getServer()->getCraftingManager()->registerRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANK, null, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, null, 1)));
 
 		Entity::registerEntity(BoatEntity::class, true);
 	}
