@@ -23,15 +23,7 @@ class Boat extends Entity{
 		}
 	}
 
-	public function kill() : void{
-		parent::kill();
-
-		foreach($this->getDrops() as $item){
-			$this->getLevel()->dropItem($this, $item);
-		}
-	}
-
-	public function getDrops(): array{
+	public function getDrops() : array{
 		return [
 			Item::get(333, 0, 1)
 		];
