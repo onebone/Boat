@@ -8,7 +8,7 @@ use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
 
 class Boat extends Entity{
-	const NETWORK_ID = 90;
+	public const NETWORK_ID = self::BOAT;
 
 	/** @var float */
 	public $height = 0.455;
