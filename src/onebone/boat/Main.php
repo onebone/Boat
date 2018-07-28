@@ -25,7 +25,7 @@ class Main extends PluginBase implements Listener{
 		Item::addCreativeItem(new Item(333));
 		$this->getServer()->addRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANK, null, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, null, 1)));
 
-		Entity::registerEntity("\\onebone\\boat\\entity\\Boat", true);
+		Entity::registerEntity(BoatEntity::class, true);
 	}
 
 	public function onQuit(PlayerQuitEvent $event){
