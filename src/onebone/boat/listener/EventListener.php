@@ -33,25 +33,25 @@ class EventListener implements Listener{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
 		if($packet instanceof InventoryTransactionPacket && $packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
-			$boat = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
-			if($boat instanceof BoatEntity){
-				if($packet->trData->actionType === InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT && $boat->canLink($player)){
-					$boat->link($player);
+			$entity = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
+			if($entity instanceof BoatEntity){
+				if($packet->trData->actionType === InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT && $entity->canLink($player)){
+					$entity->link($player);
 				}
 				$event->setCancelled();
 			}
 		}elseif($packet instanceof InteractPacket){
-			$boat = $player->getLevel()->getEntity($packet->target);
-			if($boat instanceof BoatEntity){
-				if($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE && $boat->isRider($player)){
-					$boat->unlink($player);
+			$entity = $player->getLevel()->getEntity($packet->target);
+			if($entity instanceof BoatEntity){
+				if($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE && $entity->isRider($player)){
+					$entity->unlink($player);
 				}
 				$event->setCancelled();
 			}
 		}elseif($packet instanceof MoveEntityAbsolutePacket){
-			$boat = $player->getLevel()->getEntity($packet->entityRuntimeId);
-			if($boat instanceof BoatEntity && $boat->isRider($player)){
-				$boat->absoluteMove($packet->position, $packet->xRot, $packet->zRot);
+			$entity = $player->getLevel()->getEntity($packet->entityRuntimeId);
+			if($entity instanceof BoatEntity && $entity->isRider($player)){
+				$entity->absoluteMove($packet->position, $packet->xRot, $packet->zRot);
 				$event->setCancelled();
 			}
 		}elseif($packet instanceof PlayerInputPacket || $packet instanceof SetEntityMotionPacket){
