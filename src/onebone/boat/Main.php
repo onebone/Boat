@@ -9,7 +9,9 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\inventory\BigShapelessRecipe;
-use pocketmine\item\Item;
+use pocketmine\item\{
+	Item, ItemFactory
+};
 use pocketmine\network\mcpe\protocol\{
 	InteractPacket, MovePlayerPacket, SetEntityLinkPacket
 };
@@ -21,7 +23,7 @@ class Main extends PluginBase implements Listener{
 	public function onEnable() : void{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 
-		Item::$list[333] = BoatItem::class;
+		ItemFactory::registerItem(new BoatItem(), true);
 		Item::addCreativeItem(new Item(333));
 		$this->getServer()->addRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANK, null, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, null, 1)));
 
