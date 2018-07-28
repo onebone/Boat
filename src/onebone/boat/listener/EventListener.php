@@ -35,16 +35,18 @@ class EventListener implements Listener{
 				$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
 				$event->setCancelled();
 			}
-		}elseif($packet instanceof InteractPacket && $packet->action === InteractPacket::ACTION_LEAVE_VEHICLE){
+		}elseif($packet instanceof InteractPacket){
 			$boat = $player->getLevel()->getEntity($packet->target);
 			if($boat instanceof BoatEntity){
-				$pk = new SetEntityLinkPacket();
-				$pk->link = new EntityLink($boat->getId(), $player->getId(), EntityLink::TYPE_REMOVE);
-				Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
-				$player->dataPacket($pk);
+				if($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE){
+					$pk = new SetEntityLinkPacket();
+					$pk->link = new EntityLink($boat->getId(), $player->getId(), EntityLink::TYPE_REMOVE);
+					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
+					$player->dataPacket($pk);
 
-				if(isset($this->riding[$event->getPlayer()->getName()])){
-					unset($this->riding[$event->getPlayer()->getName()]);
+					if(isset($this->riding[$event->getPlayer()->getName()])){
+						unset($this->riding[$event->getPlayer()->getName()]);
+					}
 				}
 				$event->setCancelled();
 			}
