@@ -6,8 +6,9 @@ use onebone\boat\entity\Boat as BoatEntity;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
+use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\protocol\{
-	InteractPacket, InventoryTransactionPacket, MoveEntityAbsolutePacket, PlayerInputPacket, SetEntityLinkPacket
+	InteractPacket, InventoryTransactionPacket, MoveEntityAbsolutePacket, PlayerInputPacket, SetEntityLinkPacket, SetEntityMotionPacket
 };
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Server;
@@ -67,9 +68,9 @@ class EventListener implements Listener{
 					$event->setCancelled();
 				}
 			}
-		}elseif($packet instanceof PlayerInputPacket){
+		}elseif($packet instanceof PlayerInputPacket || $packet instanceof SetEntityMotionPacket){
 			if(isset($this->riding[$player->getName()])){
-				//TODO: Handle PlayerInputPacket
+				//TODO: Handle PlayerInputPacket and SetEntityMotionPacket
 				$event->setCancelled();
 			}
 		}
