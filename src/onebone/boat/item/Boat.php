@@ -4,18 +4,16 @@ namespace onebone\boat\item;
 
 use onebone\boat\entity\Boat as BoatEntity;
 use pocketmine\block\Block;
-use pocketmine\item\Item;
+use pocketmine\item\{
+	Boat as BoatItemPM, Item
+};
 use pocketmine\level\Level;
 use pocketmine\nbt\tag\{
 	Compound, Double, Enum, Float
 };
 use pocketmine\Player;
 
-class Boat extends Item{
-	public function __construct($meta = 0, $count = 1){
-		parent::__construct(333, $meta, $count, "Boat");
-	}
-
+class Boat extends BoatItemPM{
 	public function canBeActivated(){
 		return true;
 	}
