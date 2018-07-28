@@ -28,7 +28,7 @@ class EventListener implements Listener{
 			$boat = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
 			if($boat instanceof BoatEntity){
 				$pk = new SetEntityLinkPacket();
-				$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_RIDER);
+				$pk->link = new EntityLink($boat->getId(), $player->getId(), EntityLink::TYPE_RIDER);
 				Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
 				$player->dataPacket($pk);
 
@@ -38,7 +38,7 @@ class EventListener implements Listener{
 			$boat = $player->getLevel()->getEntity($packet->target);
 			if($boat instanceof BoatEntity){
 				$pk = new SetEntityLinkPacket();
-				$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_REMOVE);
+				$pk->link = new EntityLink($boat->getId(), $player->getId(), EntityLink::TYPE_REMOVE);
 				Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
 				$player->dataPacket($pk);
 
