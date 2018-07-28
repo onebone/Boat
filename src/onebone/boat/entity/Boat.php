@@ -140,6 +140,12 @@ class Boat extends Entity{
 		if($this->rider === null){
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
+			//Lock the rider rotation -90 to 90
+			$rider->getDataPropertyManager()->setByte(self::DATA_RIDER_ROTATION_LOCKED, true);
+			$rider->getDataPropertyManager()->setFloat(self::DATA_RIDER_MAX_ROTATION, 90);
+			$rider->getDataPropertyManager()->setFloat(self::DATA_RIDER_MIN_ROTATION, -90);
+
+			//Link entity to boat
 			$pk = new SetEntityLinkPacket();
 			$pk->link = new EntityLink($this->getId(), $rider->getId(), EntityLink::TYPE_RIDER);
 			Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
@@ -159,6 +165,10 @@ class Boat extends Entity{
 		if($this->rider === $rider){
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
 
+			//Unlock the rider rotation
+			$rider->getDataPropertyManager()->setByte(self::DATA_RIDER_ROTATION_LOCKED, false);
+
+			//Unlink entity from boat
 			$pk = new SetEntityLinkPacket();
 			$pk->link = new EntityLink($this->getId(), $rider->getId(), EntityLink::TYPE_REMOVE);
 			Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
