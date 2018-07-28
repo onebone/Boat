@@ -7,7 +7,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\{
-	InteractPacket, MovePlayerPacket, SetEntityLinkPacket
+	InteractPacket, InventoryTransactionPacket, MovePlayerPacket, SetEntityLinkPacket
 };
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Server;
@@ -24,7 +24,19 @@ class EventListener implements Listener{
 	public function onPacketReceived(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
-		if($packet instanceof InteractPacket){
+		if($packet instanceof InventoryTransactionPacket){
+			if($packet->transactionType === 3){
+				$boat = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
+				if($boat instanceof BoatEntity){
+					$pk = new SetEntityLinkPacket();
+					$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_RIDER);
+					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
+					$player->dataPacket($pk);
+
+					$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
+				}
+			}
+		}elseif($packet instanceof InteractPacket){
 			$boat = $player->getLevel()->getEntity($packet->target);
 			if($boat instanceof BoatEntity){
 				if($packet->action === 3){
