@@ -3,14 +3,19 @@
 namespace onebone\boat\entity;
 
 use onebone\boat\item\Boat as BoatItem;
+use pocketmine\{
+	math\Vector3, Player, Server
+};
 use pocketmine\block\Planks;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\{
 	EntityDamageByEntityEvent, EntityDamageEvent, EntityRegainHealthEvent
 };
 use pocketmine\item\Item;
-use pocketmine\network\mcpe\protocol\EntityEventPacket;
-use pocketmine\Player;
+use pocketmine\network\mcpe\protocol\{
+	EntityEventPacket, SetEntityLinkPacket
+};
+use pocketmine\network\mcpe\protocol\types\EntityLink;
 
 class Boat extends Entity{
 	public const NETWORK_ID = self::BOAT;
@@ -26,6 +31,9 @@ class Boat extends Entity{
 	public $gravity = 0.0;
 	/** @var float */
 	public $drag = 0.1;
+
+	/** @var Entity */
+	public $rider;
 
 	public function initEntity() : void{
 		parent::initEntity();
@@ -112,5 +120,77 @@ class Boat extends Entity{
 	 */
 	public function setWoodId(int $woodId) : void{
 		$this->propertyManager->setInt(self::DATA_VARIANT, $woodId);
+	}
+
+	/**
+	 * @param Entity $rider
+	 *
+	 * @return bool
+	 */
+	public function canLink(Entity $rider) : bool{
+		return $this->rider === null;
+	}
+
+	/**
+	 * @param Entity $rider
+	 *
+	 * @return bool
+	 */
+	public function link(Entity $rider) : bool{
+		if($this->rider === null){
+			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
+
+			$pk = new SetEntityLinkPacket();
+			$pk->link = new EntityLink($this->getId(), $rider->getId(), EntityLink::TYPE_RIDER);
+			Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
+
+			$this->rider = $rider;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param Entity $rider
+	 *
+	 * @return bool
+	 */
+	public function unlink(Entity $rider) : bool{
+		if($this->rider === $rider){
+			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+
+			$pk = new SetEntityLinkPacket();
+			$pk->link = new EntityLink($this->getId(), $rider->getId(), EntityLink::TYPE_REMOVE);
+			Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
+
+			$this->rider = null;
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * @param Vector3    $pos
+	 * @param float|null $yaw
+	 * @param float|null $pitch
+	 */
+	public function absoluteMove(Vector3 $pos, ?float $yaw = null, ?float $pitch = null) : void{
+		$this->teleport($pos, $yaw, $pitch);
+	}
+
+	/**
+	 * @return null|Entity
+	 */
+	public function getRider() : ?Entity{
+		return $this->rider;
+	}
+
+	/**
+	 * @param Entity $rider
+	 *
+	 * @return bool
+	 */
+	public function isRider(Entity $rider) : bool{
+		return $this->rider === $rider;
 	}
 }
