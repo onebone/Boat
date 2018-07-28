@@ -7,7 +7,7 @@ use pocketmine\block\Block;
 use pocketmine\item\{
 	Boat as BoatItemPM, Item
 };
-use pocketmine\level\Level;
+use pocketmine\math\Vector3;
 use pocketmine\nbt\tag\{
 	Compound, Double, Enum, Float
 };
@@ -18,8 +18,8 @@ class Boat extends BoatItemPM{
 		return true;
 	}
 
-	public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz) : bool{
-		$realPos = $block->getSide($face);
+	public function onActivate(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector) : bool{
+		$realPos = $blockClicked->getSide($face);
 
 		$boat = new BoatEntity($player->getLevel()->getChunk($realPos->getX() >> 4, $realPos->getZ() >> 4), new Compound("", [
 			"Pos" => new Enum("Pos", [
