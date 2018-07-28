@@ -4,7 +4,6 @@ namespace onebone\boat;
 
 use onebone\boat\entity\Boat;
 use onebone\boat\item\Boat as BoatItem;
-use onebone\boat\packet\PlayerInputPacket;
 use pocketmine\entity\Entity;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
@@ -27,8 +26,6 @@ class Main extends PluginBase implements Listener{
 		$this->getServer()->addRecipe((new BigShapelessRecipe(Item::get(333, 0, 1)))->addIngredient(Item::get(Item::WOODEN_PLANK, null, 5))->addIngredient(Item::get(Item::WOODEN_SHOVEL, null, 1)));
 
 		Entity::registerEntity("\\onebone\\boat\\entity\\Boat", true);
-
-		$this->getServer()->getNetwork()->registerPacket(0xae, PlayerInputPacket::class);
 	}
 
 	public function onQuit(PlayerQuitEvent $event){
