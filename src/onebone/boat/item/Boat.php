@@ -3,11 +3,10 @@
 namespace onebone\boat\item;
 
 use onebone\boat\entity\Boat as BoatEntity;
-use pocketmine\block\Block;
-use pocketmine\block\Planks;
-use pocketmine\item\{
-	Boat as BoatItemPM, Item
+use pocketmine\block\{
+	Block, Planks
 };
+use pocketmine\item\Boat as BoatItemPM;
 use pocketmine\math\Vector3;
 use pocketmine\Player;
 
@@ -59,14 +58,7 @@ class Boat extends BoatItemPM{
 		$boat->spawnToAll();
 
 		//Reduce boat item count
-		if(!$player->isCreative()){
-			$item = $player->getInventory()->getItemInHand();
-			if(--$item->count <= 0){
-				$player->getInventory()->setItemInHand(Item::get(Item::AIR));
-			}else{
-				$player->getInventory()->setItemInHand($item);
-			}
-		}
+		--$this->count;
 		return true;
 	}
 }
