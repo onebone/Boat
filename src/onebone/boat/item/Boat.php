@@ -12,7 +12,7 @@ use pocketmine\Player;
 
 class Boat extends BoatItemPM{
 	public function onActivate(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector) : bool{
-		$boat = new BoatEntity($player->getLevel(), BoatEntity::createBaseNBT($blockClicked->getSide($face)));
+		$boat = new BoatEntity($player->getLevel(), BoatEntity::createBaseNBT($blockClicked->getSide($face)->add(0.5, 0.5, 0.5)));
 		$boat->spawnToAll();
 
 		if(!$player->isCreative()){
