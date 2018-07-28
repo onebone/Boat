@@ -140,6 +140,9 @@ class Boat extends Entity{
 		if($this->rider === null){
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, true);
 
+			//Set the rider seat position to y + 1
+			$rider->getDataPropertyManager()->setVector3(Entity::DATA_RIDER_SEAT_POSITION, new Vector3(0, 1, 0));
+
 			//Lock the rider rotation -90 to 90
 			$rider->getDataPropertyManager()->setByte(self::DATA_RIDER_ROTATION_LOCKED, true);
 			$rider->getDataPropertyManager()->setFloat(self::DATA_RIDER_MAX_ROTATION, 90);
@@ -164,6 +167,9 @@ class Boat extends Entity{
 	public function unlink(Entity $rider) : bool{
 		if($this->rider === $rider){
 			$rider->setDataFlag(self::DATA_FLAGS, self::DATA_FLAG_RIDING, false);
+
+			//Reset the rider seat position
+			$rider->getDataPropertyManager()->setVector3(Entity::DATA_RIDER_SEAT_POSITION, new Vector3(0, 0, 0));
 
 			//Unlock the rider rotation
 			$rider->getDataPropertyManager()->setByte(self::DATA_RIDER_ROTATION_LOCKED, false);
