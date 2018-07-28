@@ -5,31 +5,10 @@ namespace onebone\boat\entity;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\Item;
-use pocketmine\network\mcpe\protocol\{
-	AddEntityPacket, EntityEventPacket
-};
-use pocketmine\Player;
+use pocketmine\network\mcpe\protocol\EntityEventPacket;
 
 class Boat extends Entity{
 	const NETWORK_ID = 90;
-
-	public function spawnTo(Player $player){
-		$pk = new AddEntityPacket();
-		$pk->eid = $this->getId();
-		$pk->type = self::NETWORK_ID;
-		$pk->x = $this->x;
-		$pk->y = $this->y;
-		$pk->z = $this->z;
-		$pk->speedX = 0;
-		$pk->speedY = 0;
-		$pk->speedZ = 0;
-		$pk->yaw = 0;
-		$pk->pitch = 0;
-		$pk->metadata = $this->dataProperties;
-		$player->dataPacket($pk);
-
-		parent::spawnTo($player);
-	}
 
 	public function attack($damage, EntityDamageEvent $source){
 		parent::attack($damage, $source);
@@ -56,10 +35,5 @@ class Boat extends Entity{
 		return [
 			Item::get(333, 0, 1)
 		];
-	}
-
-	public function getSaveId(){
-		$class = new \ReflectionClass(static::class);
-		return $class->getShortName();
 	}
 }
