@@ -10,7 +10,7 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 class Boat extends Entity{
 	const NETWORK_ID = 90;
 
-	public function attack($damage, EntityDamageEvent $source){
+	public function attack($damage, EntityDamageEvent $source) : void{
 		parent::attack($damage, $source);
 
 		if(!$source->isCancelled()){
@@ -23,7 +23,7 @@ class Boat extends Entity{
 		}
 	}
 
-	public function kill(){
+	public function kill() : void{
 		parent::kill();
 
 		foreach($this->getDrops() as $item){
@@ -31,7 +31,7 @@ class Boat extends Entity{
 		}
 	}
 
-	public function getDrops(){
+	public function getDrops(): array{
 		return [
 			Item::get(333, 0, 1)
 		];

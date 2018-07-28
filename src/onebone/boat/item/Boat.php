@@ -14,11 +14,11 @@ use pocketmine\nbt\tag\{
 use pocketmine\Player;
 
 class Boat extends BoatItemPM{
-	public function canBeActivated(){
+	public function canBeActivated() : bool{
 		return true;
 	}
 
-	public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz){
+	public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz) : bool{
 		$realPos = $block->getSide($face);
 
 		$boat = new BoatEntity($player->getLevel()->getChunk($realPos->getX() >> 4, $realPos->getZ() >> 4), new Compound("", [

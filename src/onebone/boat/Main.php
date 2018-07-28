@@ -18,7 +18,7 @@ use pocketmine\plugin\PluginBase;
 class Main extends PluginBase implements Listener{
 	private $riding = [];
 
-	public function onEnable(){
+	public function onEnable() : void{
 		$this->getServer()->getPluginManager()->registerEvents($this, $this);
 
 		Item::$list[333] = BoatItem::class;
@@ -28,13 +28,13 @@ class Main extends PluginBase implements Listener{
 		Entity::registerEntity(BoatEntity::class, true);
 	}
 
-	public function onQuit(PlayerQuitEvent $event){
+	public function onQuit(PlayerQuitEvent $event) : void{
 		if(isset($this->riding[$event->getPlayer()->getName()])){
 			unset($this->riding[$event->getPlayer()->getName()]);
 		}
 	}
 
-	public function onPacketReceived(DataPacketReceiveEvent $event){
+	public function onPacketReceived(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
 		if($packet instanceof InteractPacket){
