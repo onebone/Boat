@@ -19,8 +19,8 @@ class Main extends PluginBase{
 		$this->getServer()->getCraftingManager()->registerRecipe(
 			new ShapelessRecipe(
 				[
-					Item::get(Item::WOODEN_PLANKS, null, 5),
-					Item::get(Item::WOODEN_SHOVEL, null, 1)
+					Item::get(Item::WOODEN_PLANKS, 0, 5),
+					Item::get(Item::WOODEN_SHOVEL, 0, 1)
 				],
 				[Item::get(333, 0, 1)])
 		);
