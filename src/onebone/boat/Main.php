@@ -22,7 +22,7 @@ class Main extends PluginBase{
 					Item::get(Item::WOODEN_PLANKS, 0, 5),
 					Item::get(Item::WOODEN_SHOVEL, 0, 1)
 				],
-				[Item::get(333, 0, 1)])
+				[Item::get(Item::BOAT, 0, 1)])
 		);
 
 		Entity::registerEntity(BoatEntity::class, true);

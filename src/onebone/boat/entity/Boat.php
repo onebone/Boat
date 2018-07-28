@@ -38,7 +38,7 @@ class Boat extends Entity{
 
 	public function getDrops() : array{
 		return [
-			Item::get(333, 0, 1)
+			Item::get(Item::BOAT, 0, 1)
 		];
 	}
 }
