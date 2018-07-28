@@ -62,9 +62,7 @@ class Boat extends Entity{
 			$pk = new EntityEventPacket();
 			$pk->entityRuntimeId = $this->id;
 			$pk->event = EntityEventPacket::HURT_ANIMATION;
-			foreach($this->getLevel()->getPlayers() as $player){
-				$player->dataPacket($pk);
-			}
+			Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
 		}
 	}
 
