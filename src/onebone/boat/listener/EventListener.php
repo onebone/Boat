@@ -15,13 +15,13 @@ use pocketmine\Server;
 class EventListener implements Listener{
 	private $riding = [];
 
-	public function onQuit(PlayerQuitEvent $event) : void{
+	public function onPlayerQuitEvent(PlayerQuitEvent $event) : void{
 		if(isset($this->riding[$event->getPlayer()->getName()])){
 			unset($this->riding[$event->getPlayer()->getName()]);
 		}
 	}
 
-	public function onPacketReceived(DataPacketReceiveEvent $event) : void{
+	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
 		if($packet instanceof InventoryTransactionPacket && $packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
