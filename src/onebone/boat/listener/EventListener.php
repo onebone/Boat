@@ -33,6 +33,7 @@ class EventListener implements Listener{
 				$player->dataPacket($pk);
 
 				$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
+				$event->setCancelled();
 			}
 		}elseif($packet instanceof InteractPacket && $packet->action === InteractPacket::ACTION_LEAVE_VEHICLE){
 			$boat = $player->getLevel()->getEntity($packet->target);
@@ -45,17 +46,20 @@ class EventListener implements Listener{
 				if(isset($this->riding[$event->getPlayer()->getName()])){
 					unset($this->riding[$event->getPlayer()->getName()]);
 				}
+				$event->setCancelled();
 			}
 		}elseif($packet instanceof MoveEntityAbsolutePacket){
 			if(isset($this->riding[$player->getName()])){
 				$boat = $player->getLevel()->getEntity($this->riding[$player->getName()]);
 				if($boat instanceof BoatEntity){
 					$boat->teleport($packet->position, $packet->xRot, $packet->zRot);
+					$event->setCancelled();
 				}
 			}
 		}elseif($packet instanceof PlayerInputPacket){
 			if(isset($this->riding[$player->getName()])){
 				//TODO: Handle PlayerInputPacket
+				$event->setCancelled();
 			}
 		}
 	}
