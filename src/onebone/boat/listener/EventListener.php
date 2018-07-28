@@ -27,13 +27,15 @@ class EventListener implements Listener{
 		if($packet instanceof InventoryTransactionPacket && $packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
 			$boat = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
 			if($boat instanceof BoatEntity){
-				$pk = new SetEntityLinkPacket();
-				$pk->link = new EntityLink($boat->getId(), $player->getId(), EntityLink::TYPE_RIDER);
-				Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
-				$player->dataPacket($pk);
+				if($packet->trData->actionType === InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT){
+					$pk = new SetEntityLinkPacket();
+					$pk->link = new EntityLink($boat->getId(), $player->getId(), EntityLink::TYPE_RIDER);
+					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
+					$player->dataPacket($pk);
 
-				$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
-				$event->setCancelled();
+					$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
+					$event->setCancelled();
+				}
 			}
 		}elseif($packet instanceof InteractPacket){
 			$boat = $player->getLevel()->getEntity($packet->target);
