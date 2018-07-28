@@ -24,30 +24,26 @@ class EventListener implements Listener{
 	public function onPacketReceived(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
-		if($packet instanceof InventoryTransactionPacket){
-			if($packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
-				$boat = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
-				if($boat instanceof BoatEntity){
-					$pk = new SetEntityLinkPacket();
-					$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_RIDER);
-					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
-					$player->dataPacket($pk);
+		if($packet instanceof InventoryTransactionPacket && $packet->transactionType === InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY){
+			$boat = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
+			if($boat instanceof BoatEntity){
+				$pk = new SetEntityLinkPacket();
+				$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_RIDER);
+				Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
+				$player->dataPacket($pk);
 
-					$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
-				}
+				$this->riding[$player->getName()] = $packet->trData->entityRuntimeId;
 			}
-		}elseif($packet instanceof InteractPacket){
+		}elseif($packet instanceof InteractPacket && $packet->action === InteractPacket::ACTION_LEAVE_VEHICLE){
 			$boat = $player->getLevel()->getEntity($packet->target);
 			if($boat instanceof BoatEntity){
-				if($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE){
-					$pk = new SetEntityLinkPacket();
-					$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_REMOVE);
-					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
-					$player->dataPacket($pk);
+				$pk = new SetEntityLinkPacket();
+				$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_REMOVE);
+				Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
+				$player->dataPacket($pk);
 
-					if(isset($this->riding[$event->getPlayer()->getName()])){
-						unset($this->riding[$event->getPlayer()->getName()]);
-					}
+				if(isset($this->riding[$event->getPlayer()->getName()])){
+					unset($this->riding[$event->getPlayer()->getName()]);
 				}
 			}
 		}elseif($packet instanceof MovePlayerPacket){
