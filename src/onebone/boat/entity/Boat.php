@@ -10,6 +10,12 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 class Boat extends Entity{
 	const NETWORK_ID = 90;
 
+	public $height = 0.455;
+	public $width = 1.4;
+
+	public $gravity = 0;
+	public $drag = 0.1;
+
 	public function initEntity() : void{
 		$this->setMaxHealth(4);
 		//TODO: Set Entity::DATA_RIDER_SEAT_POSITION
