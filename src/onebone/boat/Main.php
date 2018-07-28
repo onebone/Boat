@@ -2,7 +2,7 @@
 
 namespace onebone\boat;
 
-use onebone\boat\entity\Boat;
+use onebone\boat\entity\Boat as BoatEntity;
 use onebone\boat\item\Boat as BoatItem;
 use pocketmine\entity\Entity;
 use pocketmine\event\Listener;
@@ -39,7 +39,7 @@ class Main extends PluginBase implements Listener{
 		$player = $event->getPlayer();
 		if($packet instanceof InteractPacket){
 			$boat = $player->getLevel()->getEntity($packet->target);
-			if($boat instanceof Boat){
+			if($boat instanceof BoatEntity){
 				if($packet->action === 1){
 					$pk = new SetEntityLinkPacket();
 					$pk->from = $boat->getId();
@@ -75,7 +75,7 @@ class Main extends PluginBase implements Listener{
 		}elseif($packet instanceof MovePlayerPacket){
 			if(isset($this->riding[$player->getName()])){
 				$boat = $player->getLevel()->getEntity($this->riding[$player->getName()]);
-				if($boat instanceof Boat){
+				if($boat instanceof BoatEntity){
 					$boat->x = $packet->x;
 					$boat->y = $packet->y;
 					$boat->z = $packet->z;
