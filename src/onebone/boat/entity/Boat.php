@@ -33,6 +33,7 @@ class Boat extends Entity{
 		}
 		$this->setWoodId($woodId);
 		$this->setMaxHealth(4);
+		$this->setGenericFlag(self::DATA_FLAG_STACKABLE, true);
 	}
 
 	public function saveNBT() : void{
