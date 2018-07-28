@@ -184,11 +184,11 @@ class Boat extends Entity{
 	}
 
 	/**
-	 * @param Vector3    $pos
-	 * @param float|null $yaw
-	 * @param float|null $pitch
+	 * @param Vector3 $pos
+	 * @param float   $yaw   = 0
+	 * @param float   $pitch = 0
 	 */
-	public function absoluteMove(Vector3 $pos, ?float $yaw = null, ?float $pitch = null) : void{
+	public function absoluteMove(Vector3 $pos, float $yaw = 0, float $pitch = 0) : void{
 		$this->setComponents($pos->x, $pos->y, $pos->z);
 		$this->setRotation($yaw, $pitch);
 		$this->updateMovement();
