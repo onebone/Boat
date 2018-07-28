@@ -15,11 +15,13 @@ class Boat extends BoatItemPM{
 		$boat = new BoatEntity($player->getLevel(), BoatEntity::createBaseNBT($blockClicked->getSide($face)));
 		$boat->spawnToAll();
 
-		$item = $player->getInventory()->getItemInHand();
-		if(--$item->count <= 0){
-			$player->getInventory()->setItemInHand(Item::get(Item::AIR));
-		}else{
-			$player->getInventory()->setItemInHand($item);
+		if(!$player->isCreative()){
+			$item = $player->getInventory()->getItemInHand();
+			if(--$item->count <= 0){
+				$player->getInventory()->setItemInHand(Item::get(Item::AIR));
+			}else{
+				$player->getInventory()->setItemInHand($item);
+			}
 		}
 		return true;
 	}
