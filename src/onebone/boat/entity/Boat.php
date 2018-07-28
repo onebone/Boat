@@ -2,6 +2,8 @@
 
 namespace onebone\boat\entity;
 
+use onebone\boat\item\Boat as BoatItem;
+use pocketmine\block\Planks;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\Item;
@@ -9,6 +11,8 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 
 class Boat extends Entity{
 	public const NETWORK_ID = self::BOAT;
+
+	public const TAG_WOOD_ID = "WoodID";
 
 	/** @var float */
 	public $height = 0.455;
@@ -21,9 +25,19 @@ class Boat extends Entity{
 	public $drag = 0.1;
 
 	public function initEntity() : void{
-		$this->setMaxHealth(4);
-
 		parent::initEntity();
+
+		$woodId = $this->namedtag->getInt(self::TAG_WOOD_ID, Planks::OAK);
+		if($woodId > 5 || $woodId < 0){
+			$woodId = Planks::OAK;
+		}
+		$this->setWoodId($woodId);
+		$this->setMaxHealth(4);
+	}
+
+	public function saveNBT() : void{
+		parent::saveNBT();
+		$this->namedtag->setInt(self::TAG_WOOD_ID, $this->getWoodId());
 	}
 
 	/**
@@ -47,7 +61,21 @@ class Boat extends Entity{
 	 */
 	public function getDrops() : array{
 		return [
-			Item::get(Item::BOAT, 0, 1)
+			new BoatItem($this->getWoodId())
 		];
+	}
+
+	/**
+	 * @return int
+	 */
+	public function getWoodId() : int{
+		return $this->propertyManager->getInt(self::DATA_VARIANT);
+	}
+
+	/**
+	 * @param int $woodId
+	 */
+	public function setWoodId(int $woodId) : void{
+		$this->propertyManager->setInt(self::DATA_VARIANT, $woodId);
 	}
 }
