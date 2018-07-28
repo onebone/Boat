@@ -5,10 +5,12 @@ namespace onebone\boat\entity;
 use onebone\boat\item\Boat as BoatItem;
 use pocketmine\block\Planks;
 use pocketmine\entity\Entity;
-use pocketmine\event\entity\EntityDamageEvent;
-use pocketmine\event\entity\EntityRegainHealthEvent;
+use pocketmine\event\entity\{
+	EntityDamageByEntityEvent, EntityDamageEvent, EntityRegainHealthEvent
+};
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\EntityEventPacket;
+use pocketmine\Player;
 
 class Boat extends Entity{
 	public const NETWORK_ID = self::BOAT;
@@ -55,6 +57,20 @@ class Boat extends Entity{
 			foreach($this->getLevel()->getPlayers() as $player){
 				$player->dataPacket($pk);
 			}
+		}
+	}
+
+	public function kill() : void{
+		parent::kill();
+
+		if($this->lastDamageCause instanceof EntityDamageByEntityEvent){
+			$damager = $this->lastDamageCause->getDamager();
+			if($damager instanceof Player and $damager->isCreative()){
+				return;
+			}
+		}
+		foreach($this->getDrops() as $item){
+			$this->getLevel()->dropItem($this, $item);
 		}
 	}
 
