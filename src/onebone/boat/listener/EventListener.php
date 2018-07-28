@@ -9,6 +9,7 @@ use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\{
 	InteractPacket, MovePlayerPacket, SetEntityLinkPacket
 };
+use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Server;
 
 class EventListener implements Listener{
@@ -28,29 +29,15 @@ class EventListener implements Listener{
 			if($boat instanceof BoatEntity){
 				if($packet->action === 1){
 					$pk = new SetEntityLinkPacket();
-					$pk->from = $boat->getId();
-					$pk->to = $player->getId();
-					$pk->type = 2;
-
-					Server::getInstance()->broadcastPacket($player->getLevel()->getPlayers(), $pk);
-					$pk = new SetEntityLinkPacket();
-					$pk->from = $boat->getId();
-					$pk->to = 0;
-					$pk->type = 2;
+					$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_RIDER);
+					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
 					$player->dataPacket($pk);
 
 					$this->riding[$player->getName()] = $packet->target;
 				}elseif($packet->action === 3){
 					$pk = new SetEntityLinkPacket();
-					$pk->from = $boat->getId();
-					$pk->to = $player->getId();
-					$pk->type = 3;
-
-					Server::getInstance()->broadcastPacket($player->getLevel()->getPlayers(), $pk);
-					$pk = new SetEntityLinkPacket();
-					$pk->from = $boat->getId();
-					$pk->to = 0;
-					$pk->type = 3;
+					$pk->link = new EntityLink($player->getId(), $boat->getId(), EntityLink::TYPE_REMOVE);
+					Server::getInstance()->broadcastPacket($player->getViewers(), $pk);
 					$player->dataPacket($pk);
 
 					if(isset($this->riding[$event->getPlayer()->getName()])){
@@ -62,9 +49,7 @@ class EventListener implements Listener{
 			if(isset($this->riding[$player->getName()])){
 				$boat = $player->getLevel()->getEntity($this->riding[$player->getName()]);
 				if($boat instanceof BoatEntity){
-					$boat->x = $packet->x;
-					$boat->y = $packet->y;
-					$boat->z = $packet->z;
+					$boat->teleport($packet->position);
 				}
 			}
 		}

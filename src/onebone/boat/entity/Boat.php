@@ -22,7 +22,7 @@ class Boat extends Entity{
 
 		if(!$source->isCancelled()){
 			$pk = new EntityEventPacket();
-			$pk->eid = $this->id;
+			$pk->entityRuntimeId = $this->id;
 			$pk->event = EntityEventPacket::HURT_ANIMATION;
 			foreach($this->getLevel()->getPlayers() as $player){
 				$player->dataPacket($pk);
