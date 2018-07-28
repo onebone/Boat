@@ -11,10 +11,6 @@ use pocketmine\math\Vector3;
 use pocketmine\Player;
 
 class Boat extends BoatItemPM{
-	public function canBeActivated() : bool{
-		return true;
-	}
-
 	public function onActivate(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector) : bool{
 		$boat = new BoatEntity($player->getLevel(), BoatEntity::createBaseNBT($blockClicked->getSide($face)));
 		$boat->spawnToAll();
