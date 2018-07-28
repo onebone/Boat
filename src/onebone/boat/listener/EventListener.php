@@ -13,14 +13,21 @@ use pocketmine\network\mcpe\protocol\types\EntityLink;
 use pocketmine\Server;
 
 class EventListener implements Listener{
+	/** @var int[] */
 	private $riding = [];
 
+	/**
+	 * @param PlayerQuitEvent $event
+	 */
 	public function onPlayerQuitEvent(PlayerQuitEvent $event) : void{
 		if(isset($this->riding[$event->getPlayer()->getName()])){
 			unset($this->riding[$event->getPlayer()->getName()]);
 		}
 	}
 
+	/**
+	 * @param DataPacketReceiveEvent $event
+	 */
 	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();

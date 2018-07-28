@@ -13,7 +13,11 @@ use pocketmine\item\{
 use pocketmine\plugin\PluginBase;
 
 class Main extends PluginBase{
+	/**
+	 * Called when the plugin is enabled
+	 */
 	public function onEnable() : void{
+		//Register boat items
 		ItemFactory::registerItem(new BoatItem(), true);
 		Item::addCreativeItem(new BoatItem());
 		$this->getServer()->getCraftingManager()->registerRecipe(
@@ -25,8 +29,10 @@ class Main extends PluginBase{
 				[Item::get(Item::BOAT, 0, 1)])
 		);
 
+		//Register boat entities
 		Entity::registerEntity(BoatEntity::class, true);
 
+		//Register event listeners
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}
 }

@@ -10,19 +10,25 @@ use pocketmine\network\mcpe\protocol\EntityEventPacket;
 class Boat extends Entity{
 	const NETWORK_ID = 90;
 
+	/** @var float */
 	public $height = 0.455;
+	/** @var float */
 	public $width = 1.4;
 
-	public $gravity = 0;
+	/** @var float */
+	public $gravity = 0.0;
+	/** @var float */
 	public $drag = 0.1;
 
 	public function initEntity() : void{
 		$this->setMaxHealth(4);
-		//TODO: Set Entity::DATA_RIDER_SEAT_POSITION
 
 		parent::initEntity();
 	}
 
+	/**
+	 * @param EntityDamageEvent $source
+	 */
 	public function attack(EntityDamageEvent $source) : void{
 		parent::attack($source);
 
@@ -36,6 +42,9 @@ class Boat extends Entity{
 		}
 	}
 
+	/**
+	 * @return Item[]
+	 */
 	public function getDrops() : array{
 		return [
 			Item::get(Item::BOAT, 0, 1)
