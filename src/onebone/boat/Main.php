@@ -11,7 +11,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\inventory\BigShapelessRecipe;
 use pocketmine\item\Item;
-use pocketmine\network\protocol\{
+use pocketmine\network\mcpe\protocol\{
 	InteractPacket, MovePlayerPacket, SetEntityLinkPacket
 };
 use pocketmine\plugin\PluginBase;

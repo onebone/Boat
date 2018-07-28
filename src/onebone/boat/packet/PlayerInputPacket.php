@@ -21,7 +21,7 @@
 
 namespace onebone\boat\packet;
 
-use pocketmine\network\protocol\DataPacket;
+use pocketmine\network\mcpe\protocol\DataPacket;
 
 class PlayerInputPacket extends DataPacket{
 	const NETWORK_ID = 0xae;

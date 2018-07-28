@@ -5,7 +5,7 @@ namespace onebone\boat\entity;
 use pocketmine\entity\Entity;
 use pocketmine\event\entity\EntityDamageEvent;
 use pocketmine\item\Item;
-use pocketmine\network\protocol\{
+use pocketmine\network\mcpe\protocol\{
 	AddEntityPacket, EntityEventPacket
 };
 use pocketmine\Player;
