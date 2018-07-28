@@ -19,7 +19,6 @@ class Main extends PluginBase{
 	public function onEnable() : void{
 		//Register boat items
 		ItemFactory::registerItem(new BoatItem(), true);
-		Item::addCreativeItem(new BoatItem());
 		$this->getServer()->getCraftingManager()->registerRecipe(
 			new ShapelessRecipe(
 				[
