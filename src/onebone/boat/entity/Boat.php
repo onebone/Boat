@@ -8,6 +8,7 @@ use pocketmine\{
 };
 use pocketmine\block\Planks;
 use pocketmine\entity\Entity;
+use pocketmine\entity\Vehicle;
 use pocketmine\event\entity\{
 	EntityDamageByEntityEvent, EntityDamageEvent, EntityRegainHealthEvent
 };
@@ -17,7 +18,7 @@ use pocketmine\network\mcpe\protocol\{
 };
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 
-class Boat extends Entity{
+class Boat extends Vehicle{
 	public const NETWORK_ID = self::BOAT;
 
 	public const TAG_WOOD_ID = "WoodID";
