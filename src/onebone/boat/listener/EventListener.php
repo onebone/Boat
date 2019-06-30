@@ -8,7 +8,7 @@ use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\network\mcpe\protocol\{
-	InteractPacket, InventoryTransactionPacket, MoveEntityAbsolutePacket, PlayerInputPacket, SetEntityMotionPacket
+	InteractPacket, InventoryTransactionPacket, MoveEntityAbsolutePacket, PlayerInputPacket, SetEntityMotionPacket, AnimatePacket
 };
 
 class EventListener implements Listener{
@@ -55,6 +55,19 @@ class EventListener implements Listener{
 			if($entity instanceof BoatEntity && $entity->isRider($player)){
 				$entity->absoluteMove($packet->position, $packet->xRot, $packet->zRot);
 				$event->setCancelled();
+			}
+		}elseif($packet instanceof AnimatePacket){
+			foreach($player->getLevel()->getEntities() as $entity){
+				if($entity instanceof BoatEntity && $entity->isRider($player)){
+					switch($packet->action){
+						case BoatEntity::ACTION_ROW_RIGHT:
+						case BoatEntity::ACTION_ROW_LEFT:
+							$entity->handleAnimatePacket($packet);
+							$event->setCancelled();
+							break;
+					}
+					break;
+				}
 			}
 		}elseif($packet instanceof PlayerInputPacket || $packet instanceof SetEntityMotionPacket){
 			if($player->getDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_RIDING)){
