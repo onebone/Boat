@@ -25,8 +25,6 @@ class Boat extends Vehicle{
 
 	public const ACTION_ROW_RIGHT = 128;
 	public const ACTION_ROW_LEFT = 129;
-	public const DATA_PADDLE_TIME_LEFT = 13;
-	public const DATA_PADDLE_TIME_RIGHT = 14;
 
 	/** @var float */
 	public $height = 0.455;
