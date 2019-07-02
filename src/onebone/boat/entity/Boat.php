@@ -8,19 +8,25 @@ use pocketmine\{
 };
 use pocketmine\block\Planks;
 use pocketmine\entity\Entity;
+use pocketmine\entity\Vehicle;
 use pocketmine\event\entity\{
 	EntityDamageByEntityEvent, EntityDamageEvent, EntityRegainHealthEvent
 };
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\{
-	EntityEventPacket, SetEntityLinkPacket, AddEntityPacket
+	EntityEventPacket, SetEntityLinkPacket, AnimatePacket, AddEntityPacket
 };
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 
-class Boat extends Entity{
+class Boat extends Vehicle{
 	public const NETWORK_ID = self::BOAT;
 
 	public const TAG_WOOD_ID = "WoodID";
+
+	public const ACTION_ROW_RIGHT = 128;
+	public const ACTION_ROW_LEFT = 129;
+	public const DATA_PADDLE_TIME_LEFT = 13;
+	public const DATA_PADDLE_TIME_RIGHT = 14;
 
 	/** @var float */
 	public $height = 0.455;
@@ -215,6 +221,23 @@ class Boat extends Entity{
 		$this->setComponents($pos->x, $pos->y, $pos->z);
 		$this->setRotation($yaw, $pitch);
 		$this->updateMovement();
+	}
+
+	/**
+	 * @param AnimatePacket $packet
+	 */
+	public function handleAnimatePacket(AnimatePacket $packet) : void{
+		if($this->rider !== null){
+			switch($packet->action){
+				case self::ACTION_ROW_RIGHT:
+					$this->propertyManager->setFloat(self::DATA_PADDLE_TIME_RIGHT, $packet->float);
+					break;
+
+				case self::ACTION_ROW_LEFT:
+					$this->propertyManager->setFloat(self::DATA_PADDLE_TIME_LEFT, $packet->float);
+					break;
+			}
+		}
 	}
 
 	/**
