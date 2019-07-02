@@ -13,7 +13,7 @@ use pocketmine\event\entity\{
 };
 use pocketmine\item\Item;
 use pocketmine\network\mcpe\protocol\{
-	EntityEventPacket, SetEntityLinkPacket
+	EntityEventPacket, SetEntityLinkPacket, AddEntityPacket
 };
 use pocketmine\network\mcpe\protocol\types\EntityLink;
 
@@ -64,6 +64,29 @@ class Boat extends Entity{
 			$pk->event = EntityEventPacket::HURT_ANIMATION;
 			Server::getInstance()->broadcastPacket($this->getViewers(), $pk);
 		}
+	}
+
+	/**
+	 * Called by spawnTo() to send whatever packets needed to spawn the entity to the client.
+	 *
+	 * @param Player $player
+	 * @override
+	 */
+	protected function sendSpawnPacket(Player $player) : void{
+		$pk = new AddEntityPacket();
+		$pk->entityRuntimeId = $this->getId();
+		$pk->type = static::NETWORK_ID;
+		$pk->position = $this->asVector3();
+		$pk->motion = $this->getMotion();
+		$pk->yaw = $this->yaw;
+		$pk->headYaw = $this->yaw; //TODO
+		$pk->pitch = $this->pitch;
+		$pk->attributes = $this->attributeMap->getAll();
+		$pk->metadata = $this->propertyManager->getAll();
+		if($this->rider !== null){
+			$pk->links[] = new EntityLink($this->getId(), $this->rider->getId(), EntityLink::TYPE_RIDER);
+		}
+		$player->dataPacket($pk);
 	}
 
 	public function kill() : void{
