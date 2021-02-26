@@ -30,9 +30,9 @@ class Boat extends BoatItemPM{
 	}
 
 	public function onActivate(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector) : bool{
-        if ($player->isSurvival()) {
-            $player->getInventory()->setItemInHand($this->pop());
-        }
+		if ($player->isSurvival()) {
+			$player->getInventory()->setItemInHand($this->pop());
+		}
 
 		$nbt = BoatEntity::createBaseNBT($blockClicked->getSide($face)->add(0.5, 0.5, 0.5));
 		$nbt->setInt(BoatEntity::TAG_WOOD_ID, $this->meta);
