@@ -15,73 +15,73 @@ use pocketmine\network\mcpe\protocol\SetActorMotionPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 
 class EventListener implements Listener{
-
-    /** @priority HIGHEST */
+	
+	/** @priority HIGHEST */
 	public function onPlayerQuitEvent(PlayerQuitEvent $event) : void{
 		$player = $event->getPlayer();
 		if (!$player->getDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_RIDING))
 		    return;
 
 		foreach($player->getLevel()->getNearbyEntities($player->getBoundingBox()->expand(2, 2, 2), $player) as $key => $entity) {
-            if ($entity instanceof BoatEntity && $entity->unlink($player))
-                return;
-        }
+			if ($entity instanceof BoatEntity && $entity->unlink($player))
+				return;
+		}
 	}
-
-    /** @priority HIGHEST */
+	
+	/** @priority HIGHEST */
 	public function onDataPacketReceiveEvent(DataPacketReceiveEvent $event) : void{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
 		if ($packet instanceof InventoryTransactionPacket) {
-            if ($packet->transactionType !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
-                return;
+			if ($packet->transactionType !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
+				return;
+		
+			$entity = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
+			if (!$entity instanceof BoatEntity)
+				return;
+			
+			if ($packet->trData->actionType !== InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT)
+				return;
+			
+			if($entity->canLink($player)){
+				$entity->link($player);
+			}
+			
+			$event->setCancelled();
+		} else if ($packet instanceof InteractPacket) {
+			$entity = $player->getLevel()->getEntity($packet->target);
+			if (!$entity instanceof BoatEntity)
+				return;
+			
+			if ($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE && $entity->isRider($player)){
+				$entity->unlink($player);
+			}
 
-            $entity = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
-            if (!$entity instanceof BoatEntity)
-                return;
-
-            if ($packet->trData->actionType !== InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT)
-                return;
-
-            if($entity->canLink($player)){
-                $entity->link($player);
-            }
-
-            $event->setCancelled();
-        } else if ($packet instanceof InteractPacket) {
-            $entity = $player->getLevel()->getEntity($packet->target);
-            if (!$entity instanceof BoatEntity)
-                return;
-
-            if ($packet->action === InteractPacket::ACTION_LEAVE_VEHICLE && $entity->isRider($player)){
-                $entity->unlink($player);
-            }
-
-            $event->setCancelled();
-        } else if ($packet instanceof MoveActorAbsolutePacket) {
-            $entity = $player->getLevel()->getEntity($packet->entityRuntimeId);
-            if ($entity instanceof BoatEntity && $entity->isRider($player)) {
-                $entity->absoluteMove($packet->position, $packet->xRot, $packet->zRot);
-                $event->setCancelled();
-            }
-        } else if ($packet instanceof AnimatePacket) {
-            foreach ($player->getLevel()->getEntities() as $entity) {
-                if ($entity instanceof BoatEntity && $entity->isRider($player)){
-                    switch ($packet->action) {
-                        case BoatEntity::ACTION_ROW_RIGHT:
-                        case BoatEntity::ACTION_ROW_LEFT:
-                            $entity->handleAnimatePacket($packet);
-                            $event->setCancelled();
-                            break;
-                    }
-                    break;
-                }
-            }
-        } else if ($packet instanceof PlayerInputPacket or $packet instanceof SetActorMotionPacket) {
-            if (!$player->getDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_RIDING))
-                return;
-
-            $event->setCancelled();
+			$event->setCancelled();
+		} else if ($packet instanceof MoveActorAbsolutePacket) {
+			$entity = $player->getLevel()->getEntity($packet->entityRuntimeId);
+			if ($entity instanceof BoatEntity && $entity->isRider($player)) {
+				$entity->absoluteMove($packet->position, $packet->xRot, $packet->zRot);
+				$event->setCancelled();
+			}
+		} else if ($packet instanceof AnimatePacket) {
+			foreach ($player->getLevel()->getEntities() as $entity) {
+				if ($entity instanceof BoatEntity && $entity->isRider($player)){
+					switch ($packet->action) {
+						case BoatEntity::ACTION_ROW_RIGHT:
+						case BoatEntity::ACTION_ROW_LEFT:
+							$entity->handleAnimatePacket($packet);
+							$event->setCancelled();
+							break;
+					}
+					break;
+				}
+			}
+		} else if ($packet instanceof PlayerInputPacket or $packet instanceof SetActorMotionPacket) {
+			if (!$player->getDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_RIDING))
+				return;
+			
+			$event->setCancelled();
 		}
 	}
 }
