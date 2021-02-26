@@ -7,31 +7,25 @@ use onebone\boat\item\Boat as BoatItem;
 use onebone\boat\listener\EventListener;
 use pocketmine\entity\Entity;
 use pocketmine\inventory\ShapelessRecipe;
-use pocketmine\item\{
-	Item, ItemFactory
-};
+use pocketmine\item\Item;
+use pocketmine\item\ItemFactory;
 use pocketmine\plugin\PluginBase;
 
 class Main extends PluginBase{
-	/**
-	 * Called when the plugin is enabled
-	 */
+
+    public function onLoad(): void{
+        Entity::registerEntity(BoatEntity::class, true);
+        ItemFactory::registerItem($item = new BoatItem(), true);
+        if (!Item::isCreativeItem($item))
+            Item::addCreativeItem($item);
+    }
+
 	public function onEnable() : void{
-		//Register boat items
-		ItemFactory::registerItem(new BoatItem(), true);
-		$this->getServer()->getCraftingManager()->registerRecipe(
-			new ShapelessRecipe(
-				[
-					Item::get(Item::WOODEN_PLANKS, 0, 5),
-					Item::get(Item::WOODEN_SHOVEL, 0, 1)
-				],
-				[Item::get(Item::BOAT, 0, 1)])
-		);
-
-		//Register boat entities
-		Entity::registerEntity(BoatEntity::class, true);
-
-		//Register event listeners
+		$this->getServer()->getCraftingManager()->registerShapelessRecipe(new ShapelessRecipe([
+            Item::get(Item::WOODEN_PLANKS, 0, 5),
+            Item::get(Item::WOODEN_SHOVEL, 0, 1)
+        ], [Item::get(Item::BOAT, 0, 1)]))
+        ;
 		$this->getServer()->getPluginManager()->registerEvents(new EventListener(), $this);
 	}
 }
