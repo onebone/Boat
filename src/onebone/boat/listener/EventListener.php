@@ -13,6 +13,7 @@ use pocketmine\network\mcpe\protocol\MoveActorAbsolutePacket;
 use pocketmine\network\mcpe\protocol\PlayerInputPacket;
 use pocketmine\network\mcpe\protocol\SetActorMotionPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
+use pocketmine\network\mcpe\protocol\types\inventory\UseItemOnEntityTransactionData;
 
 class EventListener implements Listener{
 	
@@ -33,15 +34,15 @@ class EventListener implements Listener{
 		$packet = $event->getPacket();
 		$player = $event->getPlayer();
 		if ($packet instanceof InventoryTransactionPacket) {
-			if ($packet->transactionType !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
-				return;
-		
-			$entity = $player->getLevel()->getEntity($packet->trData->entityRuntimeId);
-			if (!$entity instanceof BoatEntity)
-				return;
-			
-			if ($packet->trData->actionType !== InventoryTransactionPacket::USE_ITEM_ON_ENTITY_ACTION_INTERACT)
-				return;
+      if ($packet->trData->getTypeId() !== InventoryTransactionPacket::TYPE_USE_ITEM_ON_ENTITY)
+                return;
+
+      $entity = $player->getLevel()->getEntity($packet->trData->getEntityRuntimeId());
+      if (!$entity instanceof BoatEntity)
+                return;
+
+      if ($packet->trData->getActionType() !== UseItemOnEntityTransactionData::ACTION_INTERACT)
+        return;
 			
 			if($entity->canLink($player)){
 				$entity->link($player);
