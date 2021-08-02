@@ -2,56 +2,42 @@
 
 namespace onebone\boat\item;
 
-use pocketmine\item\Item;
-use pocketmine\level\Level;
-use pocketmine\block\Block;
-use pocketmine\Player;
-use pocketmine\nbt\tag\Compound;
-use pocketmine\nbt\tag\Enum;
-use pocketmine\nbt\tag\Double;
-use pocketmine\nbt\tag\Float;
-
 use onebone\boat\entity\Boat as BoatEntity;
+use pocketmine\block\{
+	Block, Planks
+};
+use pocketmine\item\Boat as BoatItemPM;
+use pocketmine\math\Vector3;
+use pocketmine\Player;
 
-class Boat extends Item{
-  public function __construct($meta = 0, $count = 1){
-		parent::__construct(333, $meta, $count, "Boat");
+class Boat extends BoatItemPM{
+
+	public function __construct(int $meta = 0){
+		parent::__construct($meta);
+		$this->name = $this->getVanillaName();
 	}
 
-  public function canBeActivated(){
-    return true;
-  }
+	public function getVanillaName() : string{
+		static $names = [
+			Planks::OAK => "%item.boat.oak.name",
+			Planks::SPRUCE => "%item.boat.spruce.name",
+			Planks::BIRCH => "%item.boat.birch.name",
+			Planks::JUNGLE => "%item.boat.jungle.name",
+			Planks::ACACIA => "%item.boat.acacia.name",
+			Planks::DARK_OAK => "%item.boat.dark_oak.name",
+		];
+		return $names[$this->meta] ?? "Boat";
+	}
 
-  public function onActivate(Level $level, Player $player, Block $block, Block $target, $face, $fx, $fy, $fz){
-    $realPos = $block->getSide($face);
+	public function onActivate(Player $player, Block $blockReplace, Block $blockClicked, int $face, Vector3 $clickVector) : bool{
+		if ($player->isSurvival()) {
+			$player->getInventory()->setItemInHand($this->pop());
+		}
 
-    $boat = new BoatEntity($player->getLevel()->getChunk($realPos->getX() >> 4, $realPos->getZ() >> 4), new Compound("", [
-  			"Pos" => new Enum("Pos", [
-  				new Double("", $realPos->getX()),
-  				new Double("", $realPos->getY()),
-  				new Double("", $realPos->getZ())
-  			]),
-  			"Motion" => new Enum("Motion", [
-  				new Double("", 0),
-  				new Double("", 0),
-  				new Double("", 0)
-  			]),
-  			"Rotation" => new Enum("Rotation", [
-  				new Float("", 0),
-  				new Float("", 0)
-  			]),
-  	]));
-    $boat->spawnToAll();
-
-    $item = $player->getInventory()->getItemInHand();
-    $count = $item->getCount();
-    if(--$count <= 0){
-      $player->getInventory()->setItemInHand(Item::get(Item::AIR));
-      return;
-    }
-
-    $item->setCount($count);
-    $player->getInventory()->setItemInHand($item);
-    return true;
-  }
+		$nbt = BoatEntity::createBaseNBT($blockClicked->getSide($face)->add(0.5, 0.5, 0.5));
+		$nbt->setInt(BoatEntity::TAG_WOOD_ID, $this->meta);
+		$boat = new BoatEntity($player->getLevel(), $nbt);
+		$boat->spawnToAll();
+		return true;
+	}
 }

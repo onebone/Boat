@@ -1,5 +1,7 @@
+---
 name: Boat
 main: onebone\boat\Main
-version: "1.0"
+version: 0.2.0-REVIVAL
 author: onebone
-api: [1.12.0]
+api: [3.0.0, 4.0.0]
+...
